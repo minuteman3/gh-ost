@@ -533,6 +533,10 @@ func (this *Inspector) validateTableForeignKeys(allowChildForeignKeys bool) erro
 
 // validateTableTriggers makes sure no triggers exist on the migrated table
 func (this *Inspector) validateTableTriggers() error {
+	if this.migrationContext.SkipTableTriggersCheck {
+		this.migrationContext.Log.Warning("--skip-table-triggers-check provided: will not check for triggers")
+		return nil
+	}
 	query := `
 		SELECT /* gh-ost */ COUNT(*) AS num_triggers
 		FROM
